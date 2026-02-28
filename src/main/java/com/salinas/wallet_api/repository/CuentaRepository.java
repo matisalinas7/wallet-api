@@ -11,5 +11,6 @@ public interface CuentaRepository extends JpaRepository<Cuenta,Long> {
 
     Optional<Cuenta> findByCvu(String cvu);
     Optional<Cuenta> findByAlias(String alias);
+    Optional<Cuenta> findByUsuarioEmail(String email);
 
 }
