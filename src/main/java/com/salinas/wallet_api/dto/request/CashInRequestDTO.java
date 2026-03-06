@@ -1,5 +1,8 @@
 package com.salinas.wallet_api.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +16,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CashInRequestDTO {
 
+    @NotBlank(message = "El identificador de destino no puede estar vacío")
     private String identificadorDestino;
+
+    @NotNull(message = "El monto es obligatorio")
+    @Positive(message = "El monto a ingresar debe ser mayor a cero")
     private BigDecimal monto;
 
 }

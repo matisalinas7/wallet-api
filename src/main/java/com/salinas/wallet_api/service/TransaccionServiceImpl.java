@@ -1,5 +1,8 @@
 package com.salinas.wallet_api.service;
 
+import com.salinas.wallet_api.dto.request.CashInRequestDTO;
+import com.salinas.wallet_api.dto.request.TransaccionRequestDTO;
+import com.salinas.wallet_api.dto.response.CashInResponseDTO;
 import com.salinas.wallet_api.dto.response.TransaccionResponseDTO;
 import com.salinas.wallet_api.entity.Cuenta;
 import com.salinas.wallet_api.entity.Transaccion;
@@ -32,28 +35,36 @@ public class TransaccionServiceImpl implements TransaccionService {
 
     @Override
     @Transactional
-    public Transaccion realizarTransferencia(String identificadorOrigen, String identificadorDestino, BigDecimal monto) {
+    public TransaccionResponseDTO realizarTransferencia(TransaccionRequestDTO requestDTO) {
 
-        Cuenta cuentaOrigen = buscarCuentaPorIdentificador(identificadorOrigen);
-        Cuenta cuentaDestino = buscarCuentaPorIdentificador(identificadorDestino);
+        Cuenta cuentaOrigen = buscarCuentaPorIdentificador(requestDTO.getIdentificadorOrigen());
+        Cuenta cuentaDestino = buscarCuentaPorIdentificador(requestDTO.getIdentificadorDestino());
 
-        if (cuentaOrigen.getSaldo().compareTo(monto) < 0) {
+        if (cuentaOrigen.getSaldo().compareTo(requestDTO.getMonto()) < 0) {
             throw new SaldoInsuficienteException("Saldo insuficiente para realizar la transferencia");
         }
 
-        cuentaOrigen.setSaldo(cuentaOrigen.getSaldo().subtract(monto));
-        cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(monto));
+        cuentaOrigen.setSaldo(cuentaOrigen.getSaldo().subtract(requestDTO.getMonto()));
+        cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(requestDTO.getMonto()));
 
         Transaccion transaccion = new Transaccion();
         transaccion.setTipoTransaccion(TRANSFERENCIA);
         transaccion.setCuentaOrigen(cuentaOrigen);
         transaccion.setCuentaDestino(cuentaDestino);
-        transaccion.setMonto(monto);
+        transaccion.setMonto(requestDTO.getMonto());
 
         cuentaRepository.save(cuentaOrigen);
         cuentaRepository.save(cuentaDestino);
 
-        return transaccionRepository.save(transaccion);
+        Transaccion transaccionGuardada =  transaccionRepository.save(transaccion);
+
+        TransaccionResponseDTO  response = new TransaccionResponseDTO();
+        response.setId(transaccionGuardada.getId());
+        response.setMonto(transaccionGuardada.getMonto());
+        response.setFecha(transaccionGuardada.getFechaAlta());
+        response.setTipoTransaccion(transaccionGuardada.getTipoTransaccion());
+
+        return response;
     }
 
     private Cuenta buscarCuentaPorIdentificador(String identificador) {
@@ -69,20 +80,27 @@ public class TransaccionServiceImpl implements TransaccionService {
 
     @Override
     @Transactional
-    public Transaccion realizarCashIn(String identificadorDestino, BigDecimal monto) {
+    public CashInResponseDTO realizarCashIn(CashInRequestDTO requestDTO) {
 
-        Cuenta cuentaDestino = buscarCuentaPorIdentificador(identificadorDestino);
+        Cuenta cuentaDestino = buscarCuentaPorIdentificador(requestDTO.getIdentificadorDestino());
 
-        cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(monto));
+        cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(requestDTO.getMonto()));
 
         Transaccion transaccion = new Transaccion();
         transaccion.setTipoTransaccion(CASH_IN);
         transaccion.setCuentaDestino(cuentaDestino);
-        transaccion.setMonto(monto);
+        transaccion.setMonto(requestDTO.getMonto());
 
         cuentaRepository.save(cuentaDestino);
 
-        return transaccionRepository.save(transaccion);
+        Transaccion transaccionGuardada = transaccionRepository.save(transaccion);
+
+        CashInResponseDTO response = new CashInResponseDTO();
+        response.setId(transaccionGuardada.getId());
+        response.setMonto(transaccionGuardada.getMonto());
+        response.setFecha(transaccionGuardada.getFechaAlta());
+
+        return response;
     }
 
     public List<TransaccionResponseDTO> obtenerHistorial(String identificador) {

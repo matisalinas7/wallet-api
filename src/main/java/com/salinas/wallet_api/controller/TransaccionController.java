@@ -6,6 +6,9 @@ import com.salinas.wallet_api.dto.response.CashInResponseDTO;
 import com.salinas.wallet_api.dto.response.TransaccionResponseDTO;
 import com.salinas.wallet_api.entity.Transaccion;
 import com.salinas.wallet_api.service.TransaccionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/transacciones")
+@Tag(name = "2. Gestión de Transacciones", description = "Endpoints para realizar movimientos financieros y visualizarlos")
 public class TransaccionController {
 
     private final TransaccionService transaccionService;
@@ -23,33 +27,19 @@ public class TransaccionController {
     }
 
     @PostMapping("/transferir")
-    public ResponseEntity<TransaccionResponseDTO> registrarTransaccion(@RequestBody TransaccionRequestDTO transaccionRequestDTO) {
-
-        Transaccion transaccion = transaccionService.realizarTransferencia(transaccionRequestDTO.getIdentificadorOrigen(), transaccionRequestDTO.getIdentificadorDestino(), transaccionRequestDTO.getMonto());
-
-        TransaccionResponseDTO transaccionResponseDTO = new TransaccionResponseDTO();
-        transaccionResponseDTO.setId(transaccion.getId());
-        transaccionResponseDTO.setMonto(transaccion.getMonto());
-        transaccionResponseDTO.setTipoTransaccion(transaccion.getTipoTransaccion());
-        transaccionResponseDTO.setFecha(transaccion.getFechaAlta());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(transaccionResponseDTO);
+    @Operation(summary = "Realizar una transferencia", description = "Permite realizar una transferencia de dinero hacia otro usuario")
+    public ResponseEntity<TransaccionResponseDTO> registrarTransaccion(@Valid @RequestBody TransaccionRequestDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(transaccionService.realizarTransferencia(requestDTO));
     }
 
     @PostMapping("/cashin")
-    public ResponseEntity<CashInResponseDTO> realizarCashIn(@RequestBody CashInRequestDTO cashInRequestDTO) {
-
-        Transaccion transaccion = transaccionService.realizarCashIn(cashInRequestDTO.getIdentificadorDestino(), cashInRequestDTO.getMonto());
-
-        CashInResponseDTO cashInResponseDTO = new CashInResponseDTO();
-        cashInResponseDTO.setId(transaccion.getId());
-        cashInResponseDTO.setMonto(transaccion.getMonto());
-        cashInResponseDTO.setFecha(transaccion.getFechaAlta());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(cashInResponseDTO);
+    @Operation(summary = "Ingresar dinero", description = "Permite ingresar dinero a la cuenta")
+    public ResponseEntity<CashInResponseDTO> realizarCashIn(@Valid @RequestBody CashInRequestDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(transaccionService.realizarCashIn(requestDTO));
     }
 
     @GetMapping("/historial/{identificador}")
+    @Operation(summary = "Ver Historial de movimientos", description = "Permite visualizar el historial de movimientos de un usuario")
     public ResponseEntity<List<TransaccionResponseDTO>> verHistorial(@PathVariable String identificador) {
         return ResponseEntity.ok(transaccionService.obtenerHistorial(identificador));
     }

@@ -3,6 +3,7 @@ package com.salinas.wallet_api.exception;
 import com.salinas.wallet_api.dto.response.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -26,5 +27,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> handleCuentaNoEncontrada(CuentaNotFoundException ex) {
         ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
