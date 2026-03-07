@@ -7,6 +7,8 @@ import com.salinas.wallet_api.entity.Usuario;
 import com.salinas.wallet_api.repository.CuentaRepository;
 import com.salinas.wallet_api.repository.UsuarioRepository;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +20,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final CuentaRepository cuentaRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, CuentaRepository cuentaRepository) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, CuentaRepository cuentaRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.cuentaRepository = cuentaRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setNombre(requestDTO.getNombre());
         usuario.setApellido(requestDTO.getApellido());
         usuario.setEmail(requestDTO.getEmail());
-        usuario.setContrasenia(requestDTO.getContrasenia());
+        usuario.setContrasenia(passwordEncoder.encode(requestDTO.getContrasenia()));
         usuario.setTelefono(requestDTO.getTelefono());
 
         Usuario guardado = usuarioRepository.save(usuario);

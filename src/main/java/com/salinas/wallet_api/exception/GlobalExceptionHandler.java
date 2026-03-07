@@ -34,4 +34,10 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO error = new ErrorResponseDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCredenciales(CredencialesInvalidasException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
 }
