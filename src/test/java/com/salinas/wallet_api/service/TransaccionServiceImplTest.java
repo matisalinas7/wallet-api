@@ -70,6 +70,7 @@ class TransaccionServiceImplTest {
         assertEquals(new BigDecimal("800.00"), cuentaOrigen.getSaldo());
         assertEquals(new BigDecimal("700.00"), cuentaDestino.getSaldo());
         verify(transaccionRepository, times(1)).save(any(Transaccion.class));
+        verify(cuentaRepository, times(2)).save(any(Cuenta.class));
     }
 
     @Test
