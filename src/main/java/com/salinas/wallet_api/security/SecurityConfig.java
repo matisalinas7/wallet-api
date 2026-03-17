@@ -37,7 +37,7 @@ public class SecurityConfig {
                 // 3. Qué rutas son públicas y cuáles privadas
                 .authorizeHttpRequests(auth -> auth
                         // pasa libremente a Swagger y a la documentación OpenAPI
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html","/swagger-resources/**", "/webjars/**").permitAll()
                         // cualquiera pueda registrarse
                         .requestMatchers("/api/v1/usuarios/registro", "/api/v1/auth/login").permitAll()
                         // Cualquier otra petición (como transacciones o ver historial) requiere estar autenticado
