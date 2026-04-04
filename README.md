@@ -1,6 +1,6 @@
 # 💳 Wallet API - Billetera Virtual
 
-[![Live API / Swagger](https://img.shields.io/badge/Live_API-Swagger_UI-85EA2D?style=for-the-badge&logo=swagger)](https://wallet-api-production-7745.up.railway.app/swagger-ui/index.html)
+[![Live API / Swagger](https://img.shields.io/badge/Live_API-Swagger_UI-85EA2D?style=for-the-badge&logo=swagger)](https://wallet-api-ysax.onrender.com/swagger-ui/index.html)
 [![Java 21](https://img.shields.io/badge/Java_21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)]()
 [![Spring Boot 3](https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)]()
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)]()
@@ -27,7 +27,7 @@ El proyecto está diseñado siguiendo buenas prácticas de la industria, con un 
 * **Backend:** Java 21, Spring Boot 3, Spring Security, Spring Data JPA, Hibernate.
 * **Base de Datos:** MySQL 8.0.
 * **Herramientas:** Maven, Lombok, Jakarta Validation.
-* **Infraestructura:** Docker, Docker Compose, Railway (Deploy).
+* **Infraestructura:** Docker, Docker Compose, Render (Deploy).
 * **Documentación:** OpenAPI (Swagger 3).
 
 ---
@@ -53,7 +53,7 @@ Gracias a Docker, levantar el proyecto es extremadamente sencillo. No es necesar
 ---
 ## 📡 Endpoints Principales
 
-La documentación completa y de prueba en vivo se encuentra en [Swagger UI](https://wallet-api-production-7745.up.railway.app/swagger-ui/index.html).
+La documentación completa y de prueba en vivo se encuentra en [Swagger UI](https://wallet-api-ysax.onrender.com/swagger-ui/index.html)..
 
 **Autenticación (`/api/v1/auth`)**
 * `POST` `/login`: Genera y devuelve el token JWT.
